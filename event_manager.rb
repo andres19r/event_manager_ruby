@@ -1,15 +1,7 @@
 require 'csv'
 
 def clean_zipcode(zipcode)
-  if zipcode.nil?
-    '0000'
-  elsif zipcode.length < 5
-    zipcode.rjust(5,'0')
-  elsif zipcode.length > 5
-    zipcode[0,5]
-  else
-    zipcode
-  end
+  zipcode.to_s.rjust(5,'0')[0,5]
 end
 
 puts 'EventManager Initialized!'
