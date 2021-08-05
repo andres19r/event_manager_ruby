@@ -32,7 +32,15 @@ def save_thank_you_letter(id, form_letter)
 end
 
 def clean_phone_number(phone)
-
+  phone_numbers = 0
+  0.upto(phone.length - 1) do |i|
+    phone_numbers += 1 if phone[i] !~ /\D/
+  end
+  phone = 'bad number' if phone_numbers < 10 || phone_numbers > 11
+  if phone_numbers == 11
+    phone = phone[0] == '1' ? phone[1, 10] : 'bad number'
+  end
+  phone
 end
 
 puts 'EventManager Initialized!'
@@ -51,15 +59,8 @@ contents.each do |row|
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
 
-  phone = row[:homephone]
-  phone_numbers = 0
-  0.upto(phone.length - 1) do |i|
-    phone_numbers += 1 if phone[i] !~ /\D/
-  end
-  phone = 'bad number' if phone_numbers < 10 || phone_numbers > 11
-  if phone_numbers == 11
-    phone = phone[0] == '1' ? phone[1, 10] : 'bad number'
-  end
+  phone = clean_phone_number(row[:homephone])
+  puts phone
 
   legislators = legislators_by_zipcode(zipcode)
 
