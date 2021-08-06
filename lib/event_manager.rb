@@ -51,11 +51,17 @@ def time_targeting_hours(date, hours)
   h = Time.strptime(date, '%m/%d/%y %k:%M').hour
   hours[h] += 1
 end
+
+def weekday_targeting(date, days)
+  d = Date.strptime(date, '%m/%d/%y').wday
+  days[d] += 1
+end
 puts 'EventManager Initialized!'
 
 template_letter =  File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 hours = Hash.new(0)
+days = Hash.new(0)
 
 contents = CSV.open(
   'event_attendees.csv',
@@ -69,6 +75,7 @@ contents.each do |row|
   zipcode = clean_zipcode(row[:zipcode])
   phone = clean_phone_number(row[:homephone])
   time_targeting_hours(row[:regdate], hours)
+  weekday_targeting(row[:regdate], days)
 
   legislators = legislators_by_zipcode(zipcode)
 
@@ -78,3 +85,5 @@ contents.each do |row|
 end
 
 hours_sorted = hours.sort_by { |hour, times| times }.reverse
+days_sorted = days.sort_by { |days, times| times }.reverse
+p days_sorted
