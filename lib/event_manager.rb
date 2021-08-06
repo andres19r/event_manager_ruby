@@ -81,9 +81,8 @@ contents.each do |row|
 
   form_letter = erb_template.result(binding)
 
-  # save_thank_you_letter(id, form_letter)
+  save_thank_you_letter(id, form_letter)
 end
 
 hours_sorted = hours.sort_by { |hour, times| times }.reverse
 days_sorted = days.sort_by { |days, times| times }.reverse
-p days_sorted
