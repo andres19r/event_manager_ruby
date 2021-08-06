@@ -46,6 +46,10 @@ def clean_phone_number(phone)
   phone
 end
 
+def time_targeting_hours(date)
+  h = Time.strptime(date, '%m/%d/%y %k:%M').hour
+  hours << h
+end
 puts 'EventManager Initialized!'
 
 template_letter =  File.read('form_letter.erb')
@@ -63,10 +67,7 @@ contents.each do |row|
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
   phone = clean_phone_number(row[:homephone])
-
-  reg_date = row[:regdate]
-  h = Time.strptime(reg_date, '%m/%d/%y %k:%M').hour
-  hours << h
+  time_targeting_hours(row[:regdate])
 
   legislators = legislators_by_zipcode(zipcode)
 
@@ -75,8 +76,7 @@ contents.each do |row|
   # save_thank_you_letter(id, form_letter)
 end
 
-reg_hours = hours.reduce(Hash.new(0)) do |v,k|
+reg_hours = hours.reduce(Hash.new(0)) do |v, k|
   v[k] += 1
   v
 end
-p reg_hours
